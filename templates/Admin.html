@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #000000;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        button {
+            background-color: #000000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #000000;
+        }
+
+        form label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .name-link {
+            text-decoration: none;
+            color: #000000;
+            font-weight: bold;
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .name-link:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.03);
+        }
+
+        #add-name-button {
+            background-color: #000000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 20px; /* Add margin to push it away from the list */
+        }
+        #add-component-button {
+            background-color: #000000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 20px; /* Add margin to push it away from the list */
+        }
+
+
+        #go-back {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>WELCOME ADMIN</h1>
+    </header>
+    <div class="container">
+        <button id="add-name-button">Add Components</button>
+        <button id="add-component-button">Add Employee</button>
+        <div id="name-form" style="display: none;">
+            <h2>Add Name</h2>
+            <form id="name-upload-form">
+                <label for="name-input">Name:</label>
+                <input type="text" id="name-input" name="name" required>
+                <label for="image-input">Image:</label>
+                <input type="file" id="image-input" name="image" accept="image/*">
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div id="name-list">
+        </div>
+        <div id="name-details">
+        </div>
+        <button id="go-back">Go Back</button>
+    </div>
+
+
+    <script>
+        let mockData = [
+            { id: 1, name: "Tato ka Suadagar", hours: 40, name_parts: "BOOBS",Count: "2" },
+            { id: 2, name: "Aatish Bhosdika", hours: Infinity, name_parts: "........" ,Count: "...."},
+            /*KRUPA KAR KE YAHA PE APNE AUR NAM APPEND KARE AUR DEKHE KAMAL*/
+        
+        ];
+
+        let mockImages = [];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const addNameButton = document.getElementById('add-name-button');
+            const nameForm = document.getElementById('name-form');
+            const nameUploadForm = document.getElementById('name-upload-form');
+            const nameListContainer = document.getElementById('name-list');
+            const nameDetails = document.getElementById('name-details');
+            const goBackButton = document.getElementById('go-back');
+
+            function generateListItems(data) {
+                return data.map(item => {
+                    const listItem = document.createElement('div');
+                    const nameLink = document.createElement('a');
+                    nameLink.href = `#`;
+                    nameLink.classList.add('name-link');
+                    nameLink.dataset.nameId = item.id;
+                    nameLink.textContent = item.name;
+                    listItem.appendChild(nameLink);
+                    return listItem;
+                });
+            }
+
+            function showNameDetails(data) {
+                const detailsHTML = `
+                    <h2>Name Details</h2>
+                    <table>
+                        <tr>
+                            <th>Hours</th>
+                            <th>Name Parts</th>
+                            <th>Count</th>
+                        </tr>
+                        <tr>
+                            <td>${data.hours}</td>
+                            <td>${data.name_parts}</td>
+                            <td>${data.Count}</td>
+                        </tr>
+                    </table>
+                `;
+                nameListContainer.style.display = 'none';
+                nameDetails.innerHTML = detailsHTML;
+                goBackButton.style.display = 'block';
+            }
+
+            function goBackToList() {
+                nameListContainer.style.display = 'block';
+                nameDetails.innerHTML = '';
+                goBackButton.style.display = 'none';
+            }
+
+            addNameButton.addEventListener('click', function () {
+                nameForm.style.display = 'block';
+                nameListContainer.style.display = 'none';
+                nameDetails.innerHTML = '';
+                goBackButton.style.display = 'none';
+            });
+
+            nameUploadForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const nameInput = document.getElementById('name-input');
+                const imageInput = document.getElementById('image-input');
+                const newName = nameInput.value;
+                const newImage = imageInput.files[0];
+                mockImages.push({ imageName: newImage.name });
+                alert(`New data has been added.\nName: ${newName}\nImage Name: ${newImage.name}`);
+                nameForm.style.display = 'none';
+                nameInput.value = '';
+                imageInput.value = '';
+                nameListContainer.style.display = 'block';
+            });
+
+            goBackButton.addEventListener('click', goBackToList);
+
+            function updateNameList() {
+                const listItems = generateListItems(mockData);
+                nameListContainer.innerHTML = '';
+                listItems.forEach(item => {
+                    nameListContainer.appendChild(item);
+                    const nameLink = item.querySelector('.name-link');
+                    nameLink.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const nameId = this.dataset.nameId;
+                        const selectedName = mockData.find(item => item.id === parseInt(nameId));
+                        showNameDetails(selectedName);
+                    });
+                });
+            }
+
+            updateNameList();
+        });
+    </script>
+</body>
+</html>
