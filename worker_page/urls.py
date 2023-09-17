@@ -3,6 +3,6 @@ from django.urls import path , include
 from worker_page import views
 
 urlpatterns = [
-    path('/login', views.login, name="login"),
-    path('/list', views.list, name="list"),
+    path('/login', views.emp_login, name="login"),
+    path('/emp_dash',views.emp_dash , name="emp_dash"),
 ]
