@@ -1,8 +1,10 @@
 from django.shortcuts import render , redirect
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate 
 from django.contrib.auth import logout , login
 import requests
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def dash(request):
     api_url = 'https://aatish13.pythonanywhere.com/api/admin/'
     if request.method =="POST" :
@@ -19,6 +21,8 @@ def dash(request):
     return render(request,"ad_page.html")
 
 def admin_login(request) :
+    if request.user.is_authenticated:
+        return redirect("dash")
     if request.method =="POST" :
         username = request.POST["username"]
         password = request.POST["password"]
