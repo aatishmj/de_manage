@@ -6,21 +6,16 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def dash(request):
-    api_url = 'https://aatish13.pythonanywhere.com/api/admin/'
-    if request.method =="POST" :
-        name = request.POST["name"]        
-        image = request.POST["image"]
-        data = {
-            "name":name,
-            }
-        response=requests.post(api_url, data=data, files={"drawing": image})
-        if response.status_code == 201:
-            print('Name and image added successfully!')
-        else :
-            print("f")
-    return render(request,"ad_page.html")
+    response=requests.get(url="https://aatish13.pythonanywhere.com/api/employeework/")
+    data=response.json()
+    context={
+        "api_data": data,
+    }
+    print(context)
+    return render(request,"ad_page.html", context)
 
 def admin_login(request) :
+    
     if request.user.is_authenticated:
         return redirect("dash")
     if request.method =="POST" :
@@ -32,6 +27,7 @@ def admin_login(request) :
             return redirect("dash")
         else:
             return render(request ,"loginpage.html") 
+
         
     return render(request ,"loginpage.html")
 

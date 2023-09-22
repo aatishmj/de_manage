@@ -1,7 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -133,341 +135,143 @@
         <div id="name-form" style="display: none;">
             <h2>Add Name</h2>
             <form id="name-upload-form" method="post" enctype="multipart/form-data">
-                <label for="name-input">Name:</label>
-                <input type="text" id="name-input" name="name" required>
-                <label for="image-input">Image:</label>
-                <input type="file" id="image-input" name="image">
-                <button type="submit">Submit</button>
+                <!-- Your form inputs here -->
+
             </form>
         </div>
         <div id="name-list">
+            <!-- Name list will be populated here dynamically with JavaScript -->
         </div>
         <div id="name-details">
+            <!-- Name details will be displayed here dynamically with JavaScript -->
         </div>
         <button id="go-back">Go Back</button>
     </div>
-
+    <table>
+        <tr>
+            <th>name</th>
+            <th>component</th>
+            <th>Quantity</th>
+        </tr>
+        {% for item in api_data %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.component_name }}</td>
+                <td>{{ item.quantity }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+    
 
     <script>
-        let mockData = [
-            { id: 1, name: "Tato ka Suadagar", hours: 40, name_parts: "BOOBS",Count: "2" },
-            { id: 2, name: "Aatish Bhosdika", hours: Infinity, name_parts: "........" ,Count: "...."},
-            /*KRUPA KAR KE YAHA PE APNE AUR NAM APPEND KARE AUR DEKHE KAMAL*/
-        
-        ];
+        // Initialize an empty array to hold the fetched data
+        let mockData = [];
 
-        let mockImages = [];
+        function fetchDataFromAPI() {
+            const apiURL = 'https://aatish13.pythonanywhere.com/api/employeework/';
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const addNameButton = document.getElementById('add-name-button');
-            const nameForm = document.getElementById('name-form');
-            const nameUploadForm = document.getElementById('name-upload-form');
-            const nameListContainer = document.getElementById('name-list');
-            const nameDetails = document.getElementById('name-details');
-            const goBackButton = document.getElementById('go-back');
+            // Fetch data from the API
+            fetch(apiURL)
+                .then(response => response.json())
+                .then(data => {
+                    // Update your mockData with the fetched data
+                    mockData = data;
 
-            function generateListItems(data) {
-                return data.map(item => {
-                    const listItem = document.createElement('div');
-                    const nameLink = document.createElement('a');
-                    nameLink.href = `#`;
-                    nameLink.classList.add('name-link');
-                    nameLink.dataset.nameId = item.id;
-                    nameLink.textContent = item.name;
-                    listItem.appendChild(nameLink);
-                    return listItem;
+                    // Call the function to update the name list
+                    updateNameList();
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
                 });
-            }
+        }
 
-            function showNameDetails(data) {
-                const detailsHTML = `
-                    <h2>Name Details</h2>
-                    <table>
-                        <tr>
-                            <th>Hours</th>
-                            <th>Name Parts</th>
-                            <th>Count</th>
-                        </tr>
-                        <tr>
-                            <td>${data.hours}</td>
-                            <td>${data.name_parts}</td>
-                            <td>${data.Count}</td>
-                        </tr>
-                    </table>
-                `;
-                nameListContainer.style.display = 'none';
-                nameDetails.innerHTML = detailsHTML;
-                goBackButton.style.display = 'block';
-            }
+        // Call the function to fetch data when the page loads
+        window.addEventListener('DOMContentLoaded', fetchDataFromAPI);
 
-            function goBackToList() {
-                nameListContainer.style.display = 'block';
-                nameDetails.innerHTML = '';
-                goBackButton.style.display = 'none';
-            }
+        // Your existing JavaScript code here
+        const addNameButton = document.getElementById('add-name-button');
+        const nameForm = document.getElementById('name-form');
+        const nameUploadForm = document.getElementById('name-upload-form');
+        const nameListContainer = document.getElementById('name-list');
+        const nameDetails = document.getElementById('name-details');
+        const goBackButton = document.getElementById('go-back');
 
-            addNameButton.addEventListener('click', function () {
-                nameForm.style.display = 'block';
-                nameListContainer.style.display = 'none';
-                nameDetails.innerHTML = '';
-                goBackButton.style.display = 'none';
+        function generateListItems(data) {
+            return data.map(item => {
+                const listItem = document.createElement('div');
+                const nameLink = document.createElement('a');
+                nameLink.href = `#`;
+                nameLink.classList.add('name-link');
+                nameLink.dataset.nameId = item.id;
+                nameLink.textContent = item.name;
+                listItem.appendChild(nameLink);
+                return listItem;
             });
+        }
 
-            nameUploadForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                const nameInput = document.getElementById('name-input');
-                const imageInput = document.getElementById('image-input');
-                const newName = nameInput.value;
-                const newImage = imageInput.files[0];
-                mockImages.push({ imageName: newImage.name });
-                alert(`New data has been added.\nName: ${newName}\nImage Name: ${newImage.name}`);
-                nameForm.style.display = 'none';
-                nameInput.value = '';
-                imageInput.value = '';
-                nameListContainer.style.display = 'block';
-            });
+        function showNameDetails(data) {
+            const detailsHTML = `
+                <h2>Name Details</h2>
+                <table>
+                    <tr>
+                        <th>Component Name</th>
+                        <th>Quantity</th>
+                    </tr>
+                    <tr>
+                        <td>${data.component_name}</td>
+                        <td>${data.quantity}</td>
+                    </tr>
+                </table>
+            `;
+            nameListContainer.style.display = 'none';
+            nameDetails.innerHTML = detailsHTML;
+            goBackButton.style.display = 'block';
+        }
 
-            goBackButton.addEventListener('click', goBackToList);
+        function goBackToList() {
+            nameListContainer.style.display = 'block';
+            nameDetails.innerHTML = '';
+            goBackButton.style.display = 'none';
+        }
 
-            function updateNameList() {
-                const listItems = generateListItems(mockData);
-                nameListContainer.innerHTML = '';
-                listItems.forEach(item => {
-                    nameListContainer.appendChild(item);
-                    const nameLink = item.querySelector('.name-link');
-                    nameLink.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        const nameId = this.dataset.nameId;
-                        const selectedName = mockData.find(item => item.id === parseInt(nameId));
-                        showNameDetails(selectedName);
-                    });
-                });
-            }
-
-            updateNameList();
+        addNameButton.addEventListener('click', function () {
+            nameForm.style.display = 'block';
+            nameListContainer.style.display = 'none';
+            nameDetails.innerHTML = '';
+            goBackButton.style.display = 'none';
         });
+
+        nameUploadForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('name-input');
+            const imageInput = document.getElementById('image-input');
+            const newName = nameInput.value;
+            const newImage = imageInput.files[0];
+            // You should send this data to your API for actual data storage
+            console.log(`Name: ${newName}, Image Name: ${newImage.name}`);
+            nameForm.style.display = 'none';
+            nameInput.value = '';
+            imageInput.value = '';
+            nameListContainer.style.display = 'block';
+        });
+
+        function updateNameList() {
+            const listItems = generateListItems(mockData);
+            nameListContainer.innerHTML = '';
+            listItems.forEach(item => {
+                nameListContainer.appendChild(item);
+                const nameLink = item.querySelector('.name-link');
+                nameLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const nameId = this.dataset.nameId;
+                    const selectedName = mockData.find(item => item.id === parseInt(nameId));
+                    showNameDetails(selectedName);
+                });
+            });
+        }
+
+        updateNameList();
     </script>
 </body>
 </html>
-{% comment %} 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        header {
-            background-color: #526D82;
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-            color:#DDE6ED;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-        }
-
-        h2 {
-            margin-top: 0;
-        }
-
-        button {
-            background-color: #526D82;
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-         
-        }
-        
-
-        button:hover {
-            background-color: #000000;
-        }
-
-        form label {
-            display: block;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        input[type="text"],
-        input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .name-link {
-            background-color :#e2e2e2;
-            text-decoration: none;
-            color: #000000;
-            display: block;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .name-link:hover {
-            background-color: #f0f0f0;
-            transform: scale(1.03);
-        }
-
-        #add-name-button {
-            background-color: #9DB2BF;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-bottom: 20px; /* Add margin to push it away from the list */
-        }
-        #add-component-button {
-            background-color: #9DB2BF;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-bottom: 20px; /* Add margin to push it away from the list */
-        }
-
-
-        #go-back {
-            display: none;
-            margin-top: 20px;
-        }
-
-    </style>
-</head>
-<body>
-    <header>
-        <h1>WELCOME ADMIN</h1>
-    </header>
-    <div class="container">
-        <button id="add-name-button">Add Components</button>
-        <a href="add_emp"><button id="add-component-button">Add Employee</button></a>
-        <div id="name-form" style="display: none;">
-            <h2>Add Name</h2>
-            <form id="name-upload-form" method="post" enctype="multipart/form-data">
-                <label for="name-input">Name:</label>
-                <input type="text" id="name-input" name="name" required>
-                <label for="image-input">Image:</label>
-                <input type="file" id="image-input" name="image">
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-        <div id="name-list">
-        </div>
-        <div id="name-details">
-        </div>
-        <button id="go-back">Go Back</button>
-    </div>
-
-    <script>
-        let mockData = [];
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const addNameButton = document.getElementById('add-name-button');
-            const nameForm = document.getElementById('name-form');
-            const nameUploadForm = document.getElementById('name-upload-form');
-            const nameListContainer = document.getElementById('name-list');
-            const nameDetails = document.getElementById('name-details');
-            const goBackButton = document.getElementById('go-back');
-
-            // Function to fetch data from Django API and update the list
-            function fetchDataAndUpdateList() {
-                fetch('https://aatish13.pythonanywhere.com/api/employees/') // Replace with your Django API endpoint
-                    .then(response => response.json())
-                    .then(data => {
-                        // Update the list with the data from the API
-                        mockData = data;
-                        updateNameList();
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data:', error);
-                    });
-            }
-
-            // Initial fetch and list update
-            fetchDataAndUpdateList();
-
-            // Your existing code for generating list items, showing details, etc.
-            // ...
-
-            // Modify the form submission handler to send data to the Django API
-            nameUploadForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                const nameInput = document.getElementById('name-input');
-                const imageInput = document.getElementById('image-input');
-                const newName = nameInput.value;
-                const formData = new FormData();
-                formData.append('name', newName);
-                formData.append('drawing', imageInput.files[0]);
-
-                fetch('https://aatish13.pythonanywhere.com/api/admin/', { // Replace with your Django API endpoint
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => {
-                    if (response.status === 201) {
-                        console.log('Name and image added successfully!');
-                        // After adding, fetch updated data and update the list
-                        fetchDataAndUpdateList();
-                    } else {
-                        console.error('Error adding name and image:', response.status);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error adding name and image:', error);
-                });
-
-                // Clear form inputs
-                nameInput.value = '';
-                imageInput.value = '';
-                nameForm.style.display = 'none';
-                nameListContainer.style.display = 'block';
-            });
-
-            // ...
-        });
-    </script>
-</body>
-</html> {% endcomment %}
