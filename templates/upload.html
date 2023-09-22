@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'loginstyle.css' %}">
+    <title>Login and Signup</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card_title">
+                <h1 id="formTitle">Add component</h1>
+            </div>
+            <div class="form" id="loginForm">
+                <form  method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="text" name="name" placeholder="Component name " id="name" />
+                    <input type="file" name="image"  id="image"/>
+                    <button type="submit">submit</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+    const formToggleText = document.getElementById('formToggleText');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+
+    formToggleText.addEventListener('click', (event) => {
+        if (event.target.id === 'formToggle') {
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                formToggleText.innerHTML = "Don't have an account? <a href='#' id='formToggle'>Sign Up</a>";
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                formToggleText.innerHTML = 'Already have an account? <a href="#" id="formToggle">Log In</a>';
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'loginstyle.css' %}">
+    <title>Signup</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card_title">
+                <h1 id="formTitle">Employee Details</h1>
+            </div>
+            <div class="form" id="signupForm">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="text" name="name" placeholder="Name" id="name" />
+                    <input type="email" name="email" placeholder="Email" id="email" />
+                    <input type="text" name="phone_no" placeholder="Phone No." id="phone_no" />
+                    <button type="submit">Add Employee</button>
+                </form>
+                <div class="card_terms">
+                </div>
+                <div id="formToggleText">
+                </div>
+            </div>
+
+            <div class="form" id="loginForm" style="display: none;">
+                <form method="post">
+                    {% csrf_token %}
+                    <!-- Add login form fields here -->
+                    <button type="submit">sign up</button>
+                </form>
+                <div class="card_terms">
+                    <a href="forgot-password.html">Forgot Password?</a>
+                </div>
+                <div id="formToggleText">
+                    Don't have an account? <a href="#" id="formToggle">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const formToggleText = document.getElementById('formToggleText');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+
+        formToggleText.addEventListener('click', (event) => {
+            if (event.target.id === 'formToggle') {
+                if (loginForm.style.display === 'none') {
+                    loginForm.style.display = 'block';
+                    signupForm.style.display = 'none';
+                    formToggleText.innerHTML = "Don't have an account? <a href='#' id='formToggle'>Sign Up</a>";
+                } else {
+                    loginForm.style.display = 'none';
+                    signupForm.style.display = 'block';
+                    formToggleText.innerHTML = 'Already have an account? <a href="#" id="formToggle">Log In</a>';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
