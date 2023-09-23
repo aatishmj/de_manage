@@ -15,10 +15,10 @@ def dash(request):
     for items in data1 :
         name=items["name"]
         name_list.append(name)
-    
+
     context={
         "api_data": data,
-        "name" :name_list
+        "names" :name_list
     }
     print(context)
     return render(request,"ad_page.html", context)
@@ -40,6 +40,7 @@ def admin_login(request) :
         
     return render(request ,"loginpage.html")
 
+@login_required
 def add_emp(request) :
     api_url = 'https://aatish13.pythonanywhere.com/api/employees/'
     if request.method =="POST" :
@@ -54,7 +55,7 @@ def add_emp(request) :
         response=requests.post(api_url, data=data)
 
     return render(request,"sign.html")
-   
+
 def sign(request) :
     if request.method =="POST" :
         name = request.POST["name"]
