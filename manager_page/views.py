@@ -8,8 +8,17 @@ from django.contrib.auth.decorators import login_required
 def dash(request):
     response=requests.get(url="https://aatish13.pythonanywhere.com/employee_work/")
     data=response.json()
+    response=requests.get(url="https://aatish13.pythonanywhere.com/api/employees/")
+    data1=response.json()
+    name_list =[]
+
+    for items in data1 :
+        name=items["name"]
+        name_list.append(name)
+    
     context={
         "api_data": data,
+        "name" :name_list
     }
     print(context)
     return render(request,"ad_page.html", context)
