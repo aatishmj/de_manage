@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def dash(request):
-    response=requests.get(url="https://aatish13.pythonanywhere.com/api/employeework/")
+    response=requests.get(url="https://aatish13.pythonanywhere.com/employee_work/")
     data=response.json()
     context={
         "api_data": data,
